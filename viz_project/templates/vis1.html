@@ -1,0 +1,196 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="icon" href="../../../../favicon.ico">-->
+
+    <title>Visualization and Visual Analytics</title>
+
+    <!--<link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/sticky-footer-navbar/">-->
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static',filename='bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static',filename='sticky-footer-navbar.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .centerImage
+        {
+            text-align:center;
+            display:block;
+        }
+    </style>
+
+</head>
+
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+<header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" id="navbar">
+        <a class="navbar-brand" href="http://127.0.0.1:5000/vis1">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" onclick="hour_st()">Station   <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"  onclick="hour_weather()">Weather   </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" onclick="routes()">Routes</a>
+                </li>
+            </ul>
+            <!--<form class="form-inline mt-2 mt-md-0">-->
+                <!--<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">-->
+                <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+            <!--</form>-->
+        </div>
+    </nav>
+</header>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    <!--<div class="dropdown">-->
+        <!--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+            <!--Type-->
+        <!--</button>-->
+        <!--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+            <!--<a class="dropdown-item" href="#" onclick="hour_st()">Station</a>-->
+            <!--<a class="dropdown-item" href="#" onclick="hour_weather()">Weather</a>-->
+            <!--&lt;!&ndash;<a class="dropdown-item" href="#">Month</a>&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<h1 class="mt-5" id="vistype" align="center">Hour Based Start Station EDA</h1>-->
+    <h1 id="vistype" align="center">Visualization and Visual Analytics <br> <h2 id="start2" align="center">IAT814 G100</h2></h1>
+    <!--<p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>-->
+    <div id="vis" class="lead"></div>
+    <div class="lead" id="loadingDiv" style="position:relative;" align="center">
+        <video autoplay="autoplay" loop="loop" width="600" height="400">
+            <source src="{{ url_for('static',filename='load.mp4') }}" type="video/mp4" />
+        </video></div>
+
+
+    <!--<h1 class="mt-5" id="vistype" align="center">Hour Based Start Station EDA</h1>-->
+    <!--<h1 id="start" align="center">Visualization and Visual Analytics <br> <h2 id="start2" align="center">IAT814 G100</h2></h1>-->
+    <!--&lt;!&ndash;<p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code>padding-top: 60px;</code> on the <code>body &gt; .container</code>.</p>&ndash;&gt;-->
+    <!--<div id="vis" class="lead"></div>-->
+    <!--<div class="lead" id="loadingDiv" style="position:relative;" align="center">-->
+        <!--<video autoplay="autoplay" loop="loop" width="600" height="400">-->
+            <!--<source src="{{ url_for('static',filename='load.mp4') }}" type="video/mp4" />-->
+        <!--</video></div>-->
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script type="text/javascript">
+
+        // var $vistype = $('#mt-5').hide()
+        var datas;
+        function hour_st(){
+            $('#vis').empty();
+            $('#vistype').html("Station Based on Hour EDA");
+            // $('#start').html("pushkar");
+            $('#start2').hide();
+            $(document).ready(function (){
+                $.getJSON($SCRIPT_ROOT + '/getJson1', function(data) {
+                    // $loading.hide();
+                    vegaEmbed('#vis', data)
+                    // result.view provides access to the Vega View API
+                        .then(result => console.log(result))
+                        .catch(console.warn);
+                });
+                return false;
+            });
+        }
+        function hour_weather(){
+            $('#vis').empty();
+            $('#vistype').html("Weather based on Hour EDA");
+            // $('#start').html("pushkar");
+            $('#start2').hide();
+            $(document).ready(function (){
+                $.getJSON($SCRIPT_ROOT + '/getJson2', function(data) {
+                    vegaEmbed('#vis', data)
+                    // result.view provides access to the Vega View API
+                        .then(result => console.log(result))
+                        .catch(console.warn);
+                });
+                return false;
+            });
+
+        }
+        function routes(){
+            $('#vis').empty();
+            $('#vistype').html("Weather Based on Routes EDA");
+            // $('#start').html("pushkar");
+            $('#start2').hide();
+            $(document).ready(function (){
+                $.getJSON($SCRIPT_ROOT + '/getJson3', function(data) {
+                    vegaEmbed('#vis', data)
+                    // result.view provides access to the Vega View API
+                        .then(result => console.log(result))
+                        .catch(console.warn);
+                });
+                return false;
+            });
+
+        }
+
+
+        var $loading = $('#loadingDiv').hide();
+        $(document)
+            .ajaxStart(function () {
+                $loading.show();
+            })
+            .ajaxStop(function () {
+                $loading.hide();
+            });
+        function load(){
+            var $loading = $('#loadingDiv').hide();
+            $(document)
+                .ajaxStart(function () {
+                    $loading.show();
+                })
+                .ajaxStop(function () {
+                    $loading.hide();
+                });
+        }
+
+
+        // window.onscroll = function() {scrollFunction()};
+        //
+        // function scrollFunction() {
+        //     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        //         document.getElementById("navbar").style.top = "0";
+        //     } else {
+        //         document.getElementById("navbar").style.top = "-50px";
+        //     }
+        // }
+
+    </script>
+</main>
+
+<!--<footer class="footer">-->
+    <!--<div class="container">-->
+        <!--<span class="text-muted">Place sticky footer content here.</span>-->
+    <!--</div>-->
+<!--</footer>-->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{{ url_for('static',filename='popper.min.js') }}"></script>
+<script src="{{ url_for('static',filename='bootstrap.min.js') }}"></script>
+
+
+
+</body></html>

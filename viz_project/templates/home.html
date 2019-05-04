@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .centerImage
+        {
+            text-align:center;
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@4"></script>
+
+
+<!--<script src="http://vega.github.io/vega-editor/vendor/d3.min.js" charset="utf-8"></script>-->
+<!--<script src="http://vega.github.io/vega-editor/vendor/vega.js" charset="utf-8"></script>-->
+<!--<script src="http://vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>-->
+<div id="vis"></div>
+<div id="loadingDiv" style="position:relative; left:290px; top:165px;">
+    <video autoplay="autoplay" loop="loop" width="600" height="400">
+        <source src="{{ url_for('static',filename='load.mp4') }}" type="video/mp4" />
+        </video></div>
+    <!--<img style="width:500px;height:600px;" src="{{ url_for('static',filename='load.gif') }}"></div>-->
+
+<script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<script type="text/javascript">
+
+    var datas;
+    $(document).ready(function (){
+        $.getJSON($SCRIPT_ROOT + '/getJson1', function(data) {
+            vegaEmbed('#vis', data)
+            // result.view provides access to the Vega View API
+                .then(result => console.log(result))
+                .catch(console.warn);
+        });
+        return false;
+    });
+    var $loading = $('#loadingDiv').hide();
+    $(document)
+        .ajaxStart(function () {
+            $loading.show();
+        })
+        .ajaxStop(function () {
+            $loading.hide();
+        });
+        // $.ajax({
+        //     url: $SCRIPT_ROOT + "/getJson",
+        //     type: "get",
+        //     dataType: 'json',
+        //     asyc : false,
+        //     success: function(result) {
+        //         data = result;
+        //     }
+        // });
+    // });
+    // const spec = $SCRIPT_ROOT + "/data.json";
+    // vegaEmbed('#vis', datas)
+    // // result.view provides access to the Vega View API
+    //     .then(result => console.log(result))
+    //     .catch(console.warn);
+</script>
+
+<h1>Vis Home</h1>
+
+</body>
+</html>
